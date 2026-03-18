@@ -201,9 +201,74 @@ footer{background:#0a0010;color:rgba(255,255,255,.6)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 @media(max-width:1024px){.topbar,nav,#hero,#services,#stats,#companies,#about,#roles,#why,#testimonials,#contact{padding-left:24px;padding-right:24px}.hero-stats{display:none}.ft-top{grid-template-columns:1fr 1fr;padding:40px 24px}.ft-bottom{padding:14px 24px;flex-direction:column;gap:8px;text-align:center}}
 @media(max-width:768px){.topbar{display:none}nav{padding:0 16px}.nav-links{display:none}#hero{padding:80px 16px 60px;min-height:520px}#services,#companies,#about,#roles,#why,#testimonials,#contact{padding:56px 16px}#stats{padding:40px 16px}.srv-grid,.testi-grid,.roles-grid{grid-template-columns:1fr}.about-grid,.why-grid,.contact-grid,.cf-row{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}.ft-top{grid-template-columns:1fr;padding:28px 16px}.ft-bottom{padding:14px 16px}.about-badge{bottom:-10px;right:-10px}}
+.tech-overlay{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.dot{
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #00e5ff 0%, #7c3aed 70%, transparent 100%);
+  box-shadow: 0 0 18px rgba(0,229,255,.45);
+  animation: floatDot 8s ease-in-out infinite;
+  opacity: .35;
+}
+
+.d1{top:12%;left:8%;}
+.d2{top:28%;right:14%;animation-delay:1s;}
+.d3{top:64%;left:18%;animation-delay:2s;}
+.d4{bottom:18%;right:20%;animation-delay:3s;}
+.d5{bottom:10%;left:50%;animation-delay:4s;}
+
+.line{
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,.35), rgba(124,58,237,.35), transparent);
+  box-shadow: 0 0 10px rgba(124,58,237,.2);
+  animation: pulseLine 6s ease-in-out infinite;
+  opacity: .22;
+}
+
+.l1{top:20%;left:10%;width:220px;transform:rotate(22deg);}
+.l2{top:52%;right:8%;width:260px;transform:rotate(-18deg);animation-delay:1.5s;}
+.l3{bottom:18%;left:30%;width:300px;transform:rotate(8deg);animation-delay:3s;}
+
+@keyframes floatDot{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-16px) scale(1.15);}
+}
+
+@keyframes pulseLine{
+  0%,100%{opacity:.12;transform:scaleX(1);}
+  50%{opacity:.3;transform:scaleX(1.04);}
+}
+
+.topbar,
+nav,
+section,
+footer{
+  position: relative;
+  z-index: 1;
+}
 </style>
 </head>
 <body>
+  <div class="tech-overlay">
+  <span class="dot d1"></span>
+  <span class="dot d2"></span>
+  <span class="dot d3"></span>
+  <span class="dot d4"></span>
+  <span class="dot d5"></span>
+  <span class="line l1"></span>
+  <span class="line l2"></span>
+  <span class="line l3"></span>
+</div>
 <div class="topbar">
   <div class="tb-left">
     <div class="tb-item"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Hire@mahatrixtechnologies.com</div>
