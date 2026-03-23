@@ -201,6 +201,221 @@ footer{background:#0a0010;color:rgba(255,255,255,.6)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 @media(max-width:1024px){.topbar,nav,#hero,#services,#stats,#companies,#about,#roles,#why,#testimonials,#contact{padding-left:24px;padding-right:24px}.hero-stats{display:none}.ft-top{grid-template-columns:1fr 1fr;padding:40px 24px}.ft-bottom{padding:14px 24px;flex-direction:column;gap:8px;text-align:center}}
 @media(max-width:768px){.topbar{display:none}nav{padding:0 16px}.nav-links{display:none}#hero{padding:80px 16px 60px;min-height:520px}#services,#companies,#about,#roles,#why,#testimonials,#contact{padding:56px 16px}#stats{padding:40px 16px}.srv-grid,.testi-grid,.roles-grid{grid-template-columns:1fr}.about-grid,.why-grid,.contact-grid,.cf-row{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}.ft-top{grid-template-columns:1fr;padding:28px 16px}.ft-bottom{padding:14px 16px}.about-badge{bottom:-10px;right:-10px}}
+body{
+  font-family:'Open Sans',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(106, 13, 173, 0.22), transparent 32%),
+    radial-gradient(circle at top right, rgba(138, 43, 226, 0.14), transparent 28%),
+    linear-gradient(135deg, #050507 0%, #0d0714 35%, #14091d 65%, #1a1026 100%);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* Full-page background wrapper */
+.tech-overlay{
+  position:relative;
+  min-height:100vh;
+  isolation:isolate;
+}
+
+/* Fixed luxury background */
+.tech-overlay::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-3;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(141, 92, 246, 0.10), transparent 22%),
+    radial-gradient(circle at 80% 18%, rgba(192, 132, 252, 0.08), transparent 20%),
+    radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.06), transparent 30%),
+    linear-gradient(135deg, #050507 0%, #0d0714 35%, #14091d 65%, #1a1026 100%);
+  background-attachment: fixed;
+}
+
+/* Large centered brand watermark */
+.brand-watermark{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  padding:20px;
+}
+
+.brand-watermark-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  text-align:center;
+  transform:translateY(-2%);
+}
+
+.brand-watermark img{
+  width:min(30vw, 320px);
+  max-width:320px;
+  min-width:140px;
+  opacity:0.14;
+  filter:drop-shadow(0 0 30px rgba(163, 230, 53, 0.10));
+}
+
+.brand-watermark h1{
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  font-size:clamp(42px, 8vw, 110px);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  line-height:0.95;
+  margin:0;
+  opacity:0.11;
+  background:linear-gradient(90deg, #c4b5fd 0%, #8b5cf6 45%, #d8b4fe 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* Soft layer so content stays readable */
+.brand-watermark::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(5, 5, 10, 0.28);
+  z-index:-1;
+}
+
+/* Keep main sections slightly glassy on top of background */
+nav,
+#services,
+#companies,
+#about,
+#roles,
+#why,
+#testimonials,
+#contact,
+footer{
+  position:relative;
+  z-index:2;
+}
+
+#services,
+#companies,
+#about,
+#roles,
+#why,
+#testimonials,
+#contact{
+  background:rgba(10, 10, 16, 0.72) !important;
+  backdrop-filter:blur(6px);
+}
+
+/* Keep navbar elegant on dark theme */
+nav{
+  background:rgba(8, 8, 14, 0.88);
+  backdrop-filter:blur(10px);
+  box-shadow:0 2px 16px rgba(0,0,0,.35);
+}
+
+.nav-logo-name,
+.nav-links li a{
+  color:#f3f4f6;
+}
+
+.nav-logo-sub{
+  color:rgba(255,255,255,.65);
+}
+
+.nav-links li a:hover,
+.nav-links li a.active{
+  color:#c084fc;
+  border-bottom-color:#c084fc;
+}
+
+/* Section text tuning for dark background */
+.sec-h2,
+.why-item h4,
+.role-name,
+.srv-card h3,
+.ci h3,
+.cf-box h4,
+.dir-name,
+.testi-name{
+  color:#ffffff;
+}
+
+.sec-sub,
+.about-body,
+.why-item p,
+.role-sub,
+.srv-card p,
+.ci > p,
+.ci-val,
+.testi-role,
+.testi-txt,
+.ft-desc,
+.co-note{
+  color:rgba(255,255,255,.78);
+}
+
+.co-label,
+.ci-lbl,
+.stat-lbl,
+.amini-lbl{
+  color:rgba(255,255,255,.58);
+}
+
+/* Cards on dark theme */
+.srv-card,
+.role-card,
+.testi-card,
+.cf-box,
+.dir-card,
+.why-item{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.10);
+  box-shadow:none;
+}
+
+.cfg input,
+.cfg select,
+.cfg textarea{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#ffffff;
+}
+
+.cfg input::placeholder,
+.cfg textarea::placeholder{
+  color:rgba(255,255,255,.45);
+}
+
+.cfg label{
+  color:#f5f5f5;
+}
+
+footer{
+  background:rgba(4,4,8,0.92);
+}
+
+@media(max-width:768px){
+  .brand-watermark img{
+    width:min(42vw, 220px);
+    opacity:0.12;
+  }
+
+  .brand-watermark h1{
+    font-size:clamp(28px, 10vw, 56px);
+    letter-spacing:0.10em;
+    opacity:0.10;
+  }
+
+  .brand-watermark-inner{
+    gap:12px;
+  }
+}
 </style>
 </head>
 <body>
