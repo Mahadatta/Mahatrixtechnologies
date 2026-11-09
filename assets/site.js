@@ -1,4 +1,4 @@
-/* Mahatrix website: hero board, live plans, free-trial sign-up, chat */
+/* Mahatrix website v2: logo unveil, glass lights, reveals, hero board, sign-up, chat */
 (function(){
 var API='https://mahatrix-job-agent-2cpwtflusq-uc.a.run.app';
 var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -10,6 +10,55 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 var head=$('.site-head'),mb=$('.menu-btn');
 if(mb)mb.addEventListener('click',function(){var o=head.classList.toggle('open');mb.setAttribute('aria-expanded',o);});
 $$('.nav a').forEach(function(a){a.addEventListener('click',function(){head.classList.remove('open');});});
+
+
+/* ---------- logo unveil (once per visit) ---------- */
+var intro=$('#intro');
+if(intro){
+  var seen=false;try{seen=sessionStorage.getItem('mx_intro')==='1';}catch(e){}
+  if(reduce||seen){intro.classList.add('done');document.documentElement.classList.add('ready');}
+  else{
+    try{sessionStorage.setItem('mx_intro','1');}catch(e){}
+    var endIntro=function(){if(intro.classList.contains('done'))return;intro.classList.add('done');document.documentElement.classList.add('ready');reveal();};
+    setTimeout(endIntro,2900);intro.addEventListener('click',endIntro);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')endIntro();},{once:true});
+  }
+}
+
+/* ---------- header turns to glass after scrolling ---------- */
+function onScroll(){if(head)head.classList.toggle('scrolled',window.scrollY>24);}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* ---------- reveal on scroll ---------- */
+var io=null;
+function reveal(){
+  var els=$$('.rv:not(.in)');
+  if(reduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  if(!io)io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+  els.forEach(function(e){io.observe(e);});
+}
+if(!intro||intro.classList.contains('done'))reveal();
+
+/* ---------- light that follows the pointer on glass ---------- */
+document.addEventListener('pointermove',function(e){
+  var t=e.target.closest&&e.target.closest('.lit');if(!t)return;
+  var r=t.getBoundingClientRect();t.style.setProperty('--x',(e.clientX-r.left)+'px');t.style.setProperty('--y',(e.clientY-r.top)+'px');
+},{passive:true});
+
+/* ---------- hero board tilts a little with the pointer ---------- */
+var bd=$('#board');
+if(bd&&!reduce&&matchMedia('(pointer:fine)').matches){
+  var hero=$('.hero');
+  hero.addEventListener('pointermove',function(e){var r=bd.getBoundingClientRect(),cx=(e.clientX-(r.left+r.width/2))/r.width,cy=(e.clientY-(r.top+r.height/2))/r.height;
+    bd.style.transform='perspective(1200px) rotateY('+(cx*5).toFixed(2)+'deg) rotateX('+(-cy*5).toFixed(2)+'deg)';});
+  hero.addEventListener('pointerleave',function(){bd.style.transform='';});
+}
+
+/* ---------- demo video plays when it is on screen ---------- */
+var dv=$('#demoVideo');
+if(dv&&'IntersectionObserver' in window&&!reduce){
+  new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){var p=dv.play();if(p&&p.catch)p.catch(function(){});}else dv.pause();});},{threshold:.5}).observe(dv);
+}
 
 /* ---------- hero board: job signals travel the traces into the feed ---------- */
 var JOBS=[['Data Engineer','Fabrikam Bank','Plano, TX',91],['Senior Java Developer','Contoso Health','Charlotte, NC',86],['Business Analyst','Woodgrove Financial','Jersey City, NJ',88],
@@ -59,26 +108,6 @@ if(feed){
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(start);else window.addEventListener('load',start);
   var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){ps=paths();},150);});
 }
-
-/* ---------- plans: live from the portal, fallback below ---------- */
-var FALLBACK={plans:[{id:'trial',name:'Trial',price:0,perks:['5 applications a day','Full-time jobs','Daily applications file + your own login','1 ATS resume check']},
-  {id:'basic',name:'Basic',price:50,perks:['15 applications a day','Full-time jobs','Daily applications file + your own login','ATS resume checks','Resume tailored for 2 jobs a week']},
-  {id:'standard',name:'Standard',price:100,perks:['30 applications a day','Full-time + W2 / C2C / C2H vendor jobs','Resume tailored daily','Vendor outreach in your voice','Vendor call prep + interview prep','Assessment & RTR follow-up']},
-  {id:'premium',name:'Premium',price:150,perks:['50 applications a day','All jobs — email requirements first','Resume tailored for every application','Vendor outreach in your voice','Call prep, interview prep + mock interview','Dedicated recruiter + weekly strategy call']}],trial_days:5};
-function money(v){v=Number(v||0);return '$'+(v%1?v.toFixed(2):v.toFixed(0));}
-function renderPlans(d){
-  var box=$('#plans');if(!box)return;
-  var td=d.trial_days||5;
-  box.innerHTML=(d.plans||[]).map(function(p){
-    var trial=p.id==='trial',pick=p.id==='standard';
-    return '<article class="plan'+(pick?' pick':'')+'"><h3>'+esc(p.name)+'</h3><div class="tag">'+(pick?'Most chosen':trial?td+' days, no card':'')+'</div>'+
-      '<div class="price">'+(trial?'Free':money(p.price))+(trial?'':' <small>/ month</small>')+'</div>'+
-      '<ul>'+(p.perks||[]).map(function(x){return '<li>'+esc(String(x).replace(/,?\s*with proof/i,''))+'</li>';}).join('')+'</ul>'+
-      '<button class="btn '+(pick?'btn-primary':'btn-ghost')+'" data-plan="'+esc(p.id)+'">'+(trial?'Start free trial':'Choose '+esc(p.name))+'</button></article>';}).join('');
-  $$('[data-plan]',box).forEach(function(b){b.addEventListener('click',function(){openSignup(b.getAttribute('data-plan'));});});
-}
-renderPlans(FALLBACK);
-fetch(API+'/plans/public').then(function(r){return r.ok?r.json():null;}).then(function(d){if(d&&d.plans&&d.plans.length)renderPlans(d);}).catch(function(){});
 
 /* ---------- forms ---------- */
 async function post(path,body){
