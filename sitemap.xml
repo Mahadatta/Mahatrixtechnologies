@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://mahatrixtechnologies.com/</loc></url>
-<url><loc>https://mahatrixtechnologies.com/privacy.html</loc></url>
-<url><loc>https://mahatrixtechnologies.com/terms.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/job-seekers.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/pricing.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/staffing-firms.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/employers.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/about.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/contact.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/privacy.html</loc></url>
+  <url><loc>https://mahatrixtechnologies.com/terms.html</loc></url>
 </urlset>
