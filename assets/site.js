@@ -121,7 +121,7 @@ function data(form){var o={};new FormData(form).forEach(function(v,k){if(o[k]!==
 /* free-trial / plan sign-up */
 var dlg=$('#signup');
 function openSignup(plan){
-  if(!dlg)return;
+  if(!dlg){location.href='https://jobs.mahatrixtechnologies.com/?signup=1';return;}   /* v5.89 sign-up is on the jobs website (email + password) */
   var f=$('form',dlg);f.hidden=false;$('.done',dlg).hidden=true;$('.err',f).textContent='';
   $('[name=plan]',f).value=plan||'trial';
   var PN={starter:'Launch',pro:'Accelerate',exclusive:'Autopilot'};$('#signupTitle').textContent=plan&&PN[plan]?'Start with '+PN[plan]+' — 5 days free':'Start your free trial';

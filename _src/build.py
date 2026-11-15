@@ -11,9 +11,9 @@ HERO_BOARD = re.search(r'<div class="board glass rv d2" id="board".*?</p>\n    <
 MARQUEE = re.search(r'<div class="marquee".*?</div></div>', B, re.S).group(0)
 CHAT = re.search(r'<!-- chat -->.*?</div>\n</div>\n', B, re.S).group(0)
 DEMO = sec('demo').replace('From new job to assessment invite, in 15 seconds.', 'From new job to interview, in 30 seconds.').replace('This is the real portal our recruiters use every day.', 'Matched jobs, a tailored resume, then the assessment, screening and interview — every step in your account.').replace('<div><b>Applied</b>Saved in your account</div>\n      <div><b>Assessment</b>Invite tracked and followed up</div>', '<div><b>Assessment</b>Invites caught and tracked</div>\n      <div><b>Screening</b>Calls booked, prep sheet ready</div>\n      <div><b>Interview</b>Every step in one place</div>').replace('Recorded in our demo portal — the people, companies and jobs are invented.', 'Illustration — the people, companies and jobs are invented.').replace('mahatrix-demo.mp4', 'mahatrix-demo-30s.mp4'); EMP = sec('employers')
-SITE = 'https://mahatrixtechnologies.com'; PORTAL = 'https://portal.mahatrixtechnologies.com'
+SITE = 'https://mahatrixtechnologies.com'; PORTAL = 'https://portal.mahatrixtechnologies.com'; JOBS = 'https://jobs.mahatrixtechnologies.com'
 
-NAV = [('/job-seekers.html', 'Job seekers'), ('/pricing.html', 'Pricing'), ('/staffing-firms.html', 'Staffing firms'),
+NAV = [(JOBS + '/', 'Find jobs'), ('/job-seekers.html', 'Job seekers'), ('/pricing.html', 'Pricing'), ('/staffing-firms.html', 'Staffing firms'),
        ('/employers.html', 'Employers'), ('/about.html', 'About'), ('/contact.html', 'Contact')]
 
 
@@ -56,7 +56,7 @@ def header(path):
     </nav>
     <div class="head-cta">
       <a class="btn btn-ghost" href="{PORTAL}">Sign in</a>
-      <a class="btn btn-primary" href="/pricing.html" data-signup="trial">Start free trial</a>
+      <a class="btn btn-primary" href="{JOBS}/?signup=1" data-signup="trial">Start free trial</a>
     </div>
     <button class="menu-btn" aria-label="Open menu" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></button>
   </div>
@@ -72,6 +72,7 @@ FOOT = f'''</main>
   <div class="wrap">
     <a class="brand" href="/"><img src="/assets/logo.png" alt="" width="28" height="28"><span>© <span id="year">2026</span> Mahatrix Technologies</span></a>
     <nav aria-label="Footer">
+      <a href="{JOBS}/">Find jobs</a>
       <a href="/job-seekers.html">Job seekers</a>
       <a href="/pricing.html">Pricing</a>
       <a href="/staffing-firms.html">Staffing firms</a>
@@ -84,30 +85,6 @@ FOOT = f'''</main>
     </nav>
   </div>
 </footer>
-
-<!-- free trial: the account is ready at once -->
-<dialog id="signup" aria-labelledby="signupTitle">
-  <div class="dlg-head"><div><h2 id="signupTitle">Start your free trial</h2><p class="muted" style="margin:6px 0 0">5 days of Launch, free. No card needed. Your account is ready as soon as you press Create account.</p></div><button class="x" type="button" data-close aria-label="Close">✕</button></div>
-  <form class="form" novalidate>
-    <input type="hidden" name="plan" value="trial">
-    <label>First name<input name="first_name" autocomplete="given-name" required></label>
-    <label>Last name<input name="last_name" autocomplete="family-name" required></label>
-    <label>Email<input name="email" type="email" autocomplete="email" required></label>
-    <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
-    <label class="full">Job role you want<input name="role" placeholder="e.g. Data Engineer, Java Developer, Business Analyst" required></label>
-    <label>Work authorization<select name="visa"><option value="">Choose…</option><option>H-1B</option><option>OPT / STEM OPT</option><option>CPT</option><option>H-4 EAD</option><option>Green card</option><option>U.S. citizen</option><option>Other</option></select></label>
-    <label>Years of experience<input name="experience" inputmode="numeric" placeholder="e.g. 6"></label>
-    <label>Choose a 6-digit PIN<input name="pin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" required></label>
-    <label>Type the PIN again<input name="pin2" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" required></label>
-    <label class="full">LinkedIn (optional)<input name="linkedin" placeholder="linkedin.com/in/…"></label>
-    <span class="trap" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></span>
-    <label class="check full"><input type="checkbox" name="agree" value="1"><span>I agree to the <a href="/terms.html" target="_blank">Terms</a> and <a href="/privacy.html" target="_blank">Privacy Policy</a>, and I understand Mahatrix does not guarantee a job or interviews.</span></label>
-    <div class="err full" role="alert"></div>
-    <div class="row-end full"><button class="btn btn-ghost" type="button" data-close>Cancel</button><button class="btn btn-primary" type="submit">Create account</button></div>
-  </form>
-  <div class="done" hidden><p><b>Your account is ready.</b></p><p>Sign in with your email and the PIN you just chose, then upload your resume — your matched jobs appear right away.</p>
-    <div class="row-end"><button class="btn btn-ghost" type="button" data-close>Close</button><a class="btn btn-primary" id="signupGo" href="{PORTAL}">Sign in now</a></div></div>
-</dialog>
 
 {CHAT}
 <script src="/assets/site.js" defer></script>
@@ -135,13 +112,11 @@ def cta(h, p, btn='Start free trial', kind='trial'):
 
 
 # ---------------------------------------------------------------- plans (prices shown)
-PLANS = [   # only Launch shows a price; the others are by conversation (email or chat). No job counts on the site.
-    ('starter', 'Launch', '$30', 'You apply — we find and prepare', ['Fresh jobs matched to your resume, every day', '2 tailored resumes a day',
-     'Full-time jobs', 'Application tracker in your account'], 'Start with Launch', False),
-    ('pro', 'Accelerate', '', 'You apply — with more firepower', ['Maximum fresh matches, updated hourly', '5 tailored resumes a day', 'Full-time jobs',
-     'Skill-gap report', 'Application tracker in your account'], 'Talk to us', True),
-    ('exclusive', 'Autopilot', '', 'A dedicated recruiter runs your search', ['Your own recruiter, every working day', 'Full-time, W2 and C2C jobs',
-     'Vendor requirements matched to you', 'Unlimited tailored resumes', 'Interview prep and follow-ups'], 'Talk to us', False),
+PLANS = [   # only Launch shows a price; Autopilot is by conversation. No job counts on this site (they are on the jobs website only).
+    ('starter', 'Launch', '$30', 'Search and apply yourself', ['Search every US IT job we collect, no limit', 'Apply on the company\'s own site',
+     '2 tailored resumes a day', 'Application tracker in your account'], 'Start free trial', True),
+    ('exclusive', 'Autopilot', '', 'A dedicated recruiter runs your search', ['Your own recruiter, every working day', 'Your own daily job list plus the job search',
+     'Full-time, W2 and C2C jobs', 'Vendor requirements matched to you', 'Unlimited tailored resumes', 'Interview prep and follow-ups'], 'Talk to us', False),
 ]
 MAIL = 'info@mahatrixtechnologies.com'
 
@@ -161,24 +136,24 @@ def plan_cards(short=False):
         <ul>{''.join(f"<li>{x}</li>" for x in (perks[:3] if short else perks))}</ul>
         {b}
       </article>''')
-    return '<div class="plans plans3">\n' + '\n'.join(out) + '\n    </div>'
+    return '<div class="plans plans2">\n' + '\n'.join(out) + '\n    </div>'
 
 
 ZERO = '<div class="zero-cut glass lit rv"><b>0%</b><div><h3>We never take a cut of your salary.</h3><p>No placement fee, no percentage, nothing after you\'re hired — the job and the full paycheck are yours.</p></div></div>'
-TRIAL = '<div class="trial-line glass rv"><p><b>Not sure yet?</b> Try Launch free for 5 days. No card needed — your account is ready in a minute.</p><a class="btn btn-ghost" href="#" data-signup="trial">Start free trial</a></div>'
+TRIAL = '<div class="trial-line glass rv"><p><b>Not sure yet?</b> Try it free for 5 days — apply from the job search and get 2 tailored resumes a day. No card needed.</p><a class="btn btn-ghost" href="#" data-signup="trial">Start free trial</a></div>'
 
 FAQ_SEEKER = [
     ('Do you guarantee a job or interviews?', 'No. Employers decide who they call, and anyone who guarantees that is not being straight with you. What we guarantee is the work: fresh matching jobs, careful applications, and a clear report of results.'),
-    ('Who applies — me or you?', 'On Launch and Accelerate you apply yourself, with your matched jobs and tailored resumes ready in your account. On Autopilot, a dedicated Mahatrix recruiter applies for you every working day and records each application.'),
-    ('Where do the jobs come from?', 'From employers across the USA, checked around the clock. New jobs are added every hour and matched to your resume.'),
+    ('Who applies — me or you?', 'On Launch you search and apply yourself on the company\'s own site, with tailored resumes ready in your account. On Autopilot, a dedicated Mahatrix recruiter applies for you every working day and records each application.'),
+    ('Where do the jobs come from?', 'From the career sites of employers across the USA, checked around the clock. New jobs are added every hour, and you apply on the company\'s own site.'),
     ('What about my work authorization?', 'Tell us your status when you sign up. Jobs that say you can\'t apply — for example citizenship or a clearance required, or no visa sponsorship when you need it — are filtered out.'),
     ('Do you take a percentage of my salary when I get hired?', 'No — never. There is no placement fee and no percentage of your pay, before or after you\'re hired. You only pay for your plan.'),
 ]
 FAQ_PLANS = [
-    ('What is the difference between Launch and Accelerate?', 'Both bring you full-time jobs matched to your resume, and you apply yourself. Accelerate gives you more fresh matches as they arrive, more tailored resumes each day and a skill-gap report. Message us and we will set it up for you.'),
-    ('What does Autopilot add?', 'A dedicated recruiter who applies for you, W2 and C2C contract jobs and vendor requirements as well as full-time jobs, unlimited tailored resumes, and interview preparation.'),
-    ('How does the free trial work?', 'You get 5 days of Launch, free, with no card. Create your account, upload your resume and your matched jobs appear right away. Choose a plan in your account when you are ready.'),
-    ('Why don\'t Accelerate and Autopilot show a price?', 'They are set up around your role, experience and goals. Send us a message or email and we reply with the details for you.'),
+    ('What do I get with Launch?', 'The full Mahatrix job search: every US IT job we collect, searchable by role, skill and city, with no limit. You apply on the company\'s own site, get 2 tailored resumes a day from your real experience, and track your applications in your account.'),
+    ('What does Autopilot add?', 'A dedicated recruiter who applies for you, your own daily job list as well as the search, W2 and C2C contract jobs and vendor requirements as well as full-time jobs, unlimited tailored resumes, and interview preparation.'),
+    ('How does the free trial work?', 'You get 5 days free, with no card. Create your account with your email, confirm it, and you can apply to jobs from the search and tailor 2 resumes a day. Subscribe to Launch when you are ready.'),
+    ('Why doesn\'t Autopilot show a price?', 'It is set up around your role, experience and goals. Send us a message or email and we reply with the details for you.'),
     ('Can I cancel?', 'Yes. Plans are month to month. If you don\'t renew, the plan pauses at the end of the month and you can still sign in to see your past applications.'),
     ('What happens to my resume and details?', 'They are used only to run your job search and are never sold. See our <a href="/privacy.html">privacy policy</a>, or email us to have your data deleted.'),
 ]
@@ -205,8 +180,8 @@ HOW = '''
       <p class="lede rv d1">Four steps, every working day.</p>
     </div>
     <ol class="steps">
-      <li class="step glass lit rv"><span class="n"></span><h3>Your profile</h3><p>Create your account, upload your resume and pick the roles you want and where you live.</p></li>
-      <li class="step glass lit rv d1"><span class="n"></span><h3>Jobs matched</h3><p>New jobs arrive every hour and are scored against your resume. The freshest, strongest matches come first.</p></li>
+      <li class="step glass lit rv"><span class="n"></span><h3>Your account</h3><p>Sign up with your email, upload your resume and pick the roles you want.</p></li>
+      <li class="step glass lit rv d1"><span class="n"></span><h3>Find the jobs</h3><p>New jobs arrive every hour. Search them by role and city — on Autopilot, your recruiter gets a daily list matched to your resume.</p></li>
       <li class="step glass lit rv d2"><span class="n"></span><h3>Apply with a tailored resume</h3><p>Apply yourself with a resume tailored to each job from your real experience — or let your Autopilot recruiter apply for you.</p></li>
       <li class="step glass lit rv d3"><span class="n"></span><h3>Calls and next steps</h3><p>Track every application and reply. Screens and interviews come with a prep sheet.</p></li>
     </ol>
@@ -278,11 +253,11 @@ HOME = f'''
 <section class="hero" aria-labelledby="hero-h">
   <div class="wrap">
     <div>
-      <div class="pill-note glass rv"><b>New</b>Plans from $30 a month · 5-day free trial</div>
-      <h1 id="hero-h" class="grad rv d1">Fresh IT jobs, matched to your resume.</h1>
-      <p class="lede rv d2">Mahatrix finds new IT jobs across the USA every hour and matches each one to your resume. Apply in minutes with a resume tailored to the job — or let a dedicated recruiter apply for you.</p>
+      <div class="pill-note glass rv"><b>New</b>The Mahatrix job search · 5-day free trial</div>
+      <h1 id="hero-h" class="grad rv d1">Fresh IT jobs, straight from company career sites.</h1>
+      <p class="lede rv d2">Mahatrix finds new IT jobs across the USA every hour. Search them by role and city, apply on the company's own site with a resume tailored to the job — or let a dedicated recruiter apply for you.</p>
       <div class="hero-ctas rv d3">
-        <a class="btn btn-primary" href="/pricing.html" data-signup="trial">Start 5-day free trial</a>
+        <a class="btn btn-primary" href="{JOBS}/">Search jobs</a>
         <a class="btn btn-ghost" href="#demo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>Watch 30-second demo</a>
       </div>
       <div class="facts rv d4">
@@ -310,7 +285,7 @@ HOME = f'''
     {plan_cards(short=True)}
   </div>
 </section>
-{PROMISE}{cta('Ready when you are', 'Create your free account in a minute. Upload your resume and your matched jobs appear right away.')}'''
+{PROMISE}{cta('Ready when you are', 'Create your free account in a minute, then search, apply and tailor your resume.')}'''
 
 SEEKERS = f'''
 <section class="hero sub" aria-labelledby="js-h">
@@ -325,7 +300,7 @@ SEEKERS = f'''
   <div class="wrap">
     <div class="sec-head"><h2 id="get-h" class="rv">What you get</h2></div>
     <div class="svc">
-      <article class="glass lit rv"><h3>Fresh jobs, matched to you</h3><p>New jobs every hour, scored against your resume. The freshest and strongest matches come first, near you first.</p></article>
+      <article class="glass lit rv"><h3>Search every fresh IT job</h3><p>New jobs every hour from company career sites. Search by role, skill and city, and apply on the company's own site.</p></article>
       <article class="glass lit rv d1"><h3>Resumes tailored to each job</h3><p>Built from the experience you already have — the job's key skills, in your own work history.</p></article>
       <article class="glass lit rv d2"><h3>Every application in one place</h3><p>Mark what you applied to and see every reply. Your account keeps the full history.</p></article>
       <article class="glass lit rv"><h3>Skill-gap report</h3><p>The skills employers keep asking for that your resume doesn't show yet.</p></article>
@@ -341,23 +316,23 @@ PRICING = f'''
   <div class="wrap">
     <div class="sec-head">
       <h1 id="pricing-h" class="grad rv">Plans</h1>
-      <p class="lede rv d1">Month to month — stop any time. Start with a 5-day free trial of Launch.</p>
+      <p class="lede rv d1">Month to month — stop any time. Start with a 5-day free trial.</p>
     </div>
     {ZERO}
     {TRIAL}
     {plan_cards()}
     <div class="cmp glass rv">
       <table>
-        <thead><tr><th></th><th>Launch</th><th>Accelerate</th><th>Autopilot</th></tr></thead>
+        <thead><tr><th></th><th>Launch</th><th>Autopilot</th></tr></thead>
         <tbody>
-          <tr><th>Price</th><td>$30 / month</td><td><a href="#" data-chat="job_seeker" data-msg="I am interested in the Accelerate plan.">Talk to us</a></td><td><a href="#" data-chat="job_seeker" data-msg="I am interested in the Autopilot plan.">Talk to us</a></td></tr>
-          <tr><th>Who applies</th><td>You</td><td>You</td><td>Your dedicated recruiter</td></tr>
-          <tr><th>Fresh job matches</th><td>Every day</td><td>Maximum, hourly</td><td>Maximum, hourly</td></tr>
-          <tr><th>Job types</th><td>Full-time</td><td>Full-time</td><td>Full-time, W2, C2C</td></tr>
-          <tr><th>Vendor requirements</th><td>—</td><td>—</td><td>Yes</td></tr>
-          <tr><th>Tailored resumes</th><td>2 a day</td><td>5 a day</td><td>Unlimited</td></tr>
-          <tr><th>Skill-gap report</th><td>—</td><td>Yes</td><td>Yes</td></tr>
-          <tr><th>Interview prep</th><td>—</td><td>—</td><td>Yes</td></tr>
+          <tr><th>Price</th><td>$30 / month</td><td><a href="#" data-chat="job_seeker" data-msg="I am interested in the Autopilot plan.">Talk to us</a></td></tr>
+          <tr><th>Who applies</th><td>You</td><td>Your dedicated recruiter</td></tr>
+          <tr><th>Job search</th><td>Every US IT job we collect</td><td>Yes</td></tr>
+          <tr><th>Your own daily job list</th><td>—</td><td>Yes, matched to your resume</td></tr>
+          <tr><th>Job types</th><td>Full-time and contract in the search</td><td>Full-time, W2, C2C</td></tr>
+          <tr><th>Vendor requirements</th><td>—</td><td>Yes</td></tr>
+          <tr><th>Tailored resumes</th><td>2 a day</td><td>Unlimited</td></tr>
+          <tr><th>Interview prep</th><td>—</td><td>Yes</td></tr>
         </tbody>
       </table>
     </div>
@@ -437,12 +412,12 @@ CONTACT = f'''
     </div>
   </div>
 </section>
-{faq(FAQ_SEEKER[:2] + FAQ_PLANS[2:4])}'''
+{faq(FAQ_SEEKER[:2] + FAQ_PLANS[2:3] + FAQ_PLANS[4:5])}'''
 
 PAGES = [
-    ('index.html', '/', 'Mahatrix Technologies — Fresh IT jobs, matched to your resume', 'New IT jobs across the USA every hour, matched to your resume, with tailored resumes. Plans from $30 a month, or a dedicated recruiter applies for you. 5-day free trial.', HOME, True),
-    ('job-seekers.html', '/job-seekers.html', 'For job seekers — Mahatrix Technologies', 'Fresh IT jobs matched to your resume, tailored resumes, an application tracker and interview prep — for H-1B, OPT, green card and U.S. citizen IT professionals.', SEEKERS, False),
-    ('pricing.html', '/pricing.html', 'Plans and pricing — Mahatrix Technologies', 'Launch from $30 a month, Accelerate and Autopilot by conversation. Fresh IT jobs matched to your resume and tailored resumes — or a dedicated recruiter. 0% of your salary, ever.', PRICING, False),
+    ('index.html', '/', 'Mahatrix Technologies — Fresh IT jobs from company career sites', 'Search new IT jobs across the USA, apply on the company\'s own site with a tailored resume, or let a dedicated recruiter apply for you. Launch $30 a month. 5-day free trial.', HOME, True),
+    ('job-seekers.html', '/job-seekers.html', 'For job seekers — Mahatrix Technologies', 'Search fresh IT jobs, tailored resumes, an application tracker and interview prep — for H-1B, OPT, green card and U.S. citizen IT professionals.', SEEKERS, False),
+    ('pricing.html', '/pricing.html', 'Plans and pricing — Mahatrix Technologies', 'Launch $30 a month (the full job search and tailored resumes), or Autopilot with a dedicated recruiter. Month to month. 0% of your salary, ever.', PRICING, False),
     ('staffing-firms.html', '/staffing-firms.html', 'For staffing firms — Mahatrix Technologies', 'Fresh job matches for every bench candidate, a daily team dashboard, vendor requirements matched to your bench and results that show what works.', FIRMS, False),
     ('employers.html', '/employers.html', 'Hire tech talent — Mahatrix Technologies', 'Direct hire, contract and contract-to-hire technology talent across the United States — screened and shortlisted for your team.', EMPLOYERS, False),
     ('about.html', '/about.html', 'About — Mahatrix Technologies', 'Mahatrix Technologies combines hourly job matching with experienced IT recruiters. No job guarantees, no cut of your salary, your data never sold.', ABOUT, False),

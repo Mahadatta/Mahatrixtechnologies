@@ -338,6 +338,7 @@ dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
 .hero.sub .wrap{display:block;max-width:980px}
 .hero.sub h1{font-size:clamp(36px,5.4vw,60px)}
 .plans.plans3{grid-template-columns:repeat(3,1fr)}
+.plans.plans2{grid-template-columns:repeat(2,minmax(0,420px));justify-content:center}
 .plan .price{margin:12px 0 2px;display:flex;align-items:baseline;gap:6px}
 .plan .price b{font-size:40px;font-weight:600;letter-spacing:-.03em;color:var(--ink)}
 .plan .price span{color:var(--ink-2);font-size:14px}
@@ -350,7 +351,7 @@ dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
 .cmp td{color:var(--ink)}
 .cmp tr:last-child th,.cmp tr:last-child td{border-bottom:0}
 .svc article p a{color:var(--glint);text-decoration:none}
-@media (max-width:900px){.plans.plans3{grid-template-columns:1fr}}
+@media (max-width:900px){.plans.plans3,.plans.plans2{grid-template-columns:1fr}}
 [hidden]{display:none!important}
 
 /* ===== v4 tech layer: signal mesh, decode headline, match engine, flow, tilt, beam ===== */
